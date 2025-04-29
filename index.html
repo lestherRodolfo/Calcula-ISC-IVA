@@ -134,7 +134,7 @@
       const cantidad = parseFloat(document.getElementById('cantidad').value);
       const precio = parseFloat(document.getElementById('precio').value);
       const tasaISC = parseFloat(document.getElementById('isc').value) / 100;
-      const tasaIVA = 0.15; // IVA fijo 15%
+      const tasaIVA = 0.15;
 
       if (isNaN(cantidad) || isNaN(precio) || isNaN(tasaISC)) {
         alert('Por favor, completa todos los campos correctamente.');
@@ -175,11 +175,13 @@
       let granTotal = 0;
       let totalISC = 0;
       let totalIVA = 0;
+      let subtotalGeneral = 0;
 
       productos.forEach((producto, index) => {
         granTotal += producto.total;
         totalISC += producto.impuestoISC;
         totalIVA += producto.impuestoIVA;
+        subtotalGeneral += producto.subtotal;
 
         const productoDiv = document.createElement('div');
         productoDiv.className = 'producto';
@@ -197,6 +199,11 @@
       });
 
       if (productos.length > 0) {
+        const subtotalDiv = document.createElement('div');
+        subtotalDiv.className = 'total-impuestos';
+        subtotalDiv.innerText = `Subtotal General (precio base): C$ ${subtotalGeneral.toFixed(2)}`;
+        resultadosDiv.appendChild(subtotalDiv);
+
         const totalImpuestosDiv = document.createElement('div');
         totalImpuestosDiv.className = 'total-impuestos';
         totalImpuestosDiv.innerHTML = `
