@@ -28,6 +28,7 @@
       max-width: 500px;
       margin-top: 20px;
       box-sizing: border-box;
+      position: relative;
     }
 
     label {
@@ -62,6 +63,15 @@
 
     button:hover {
       background-color: #218838;
+    }
+
+    .eliminar-btn {
+      background-color: #dc3545;
+      margin-top: 10px;
+    }
+
+    .eliminar-btn:hover {
+      background-color: #c82333;
     }
 
     .resultados {
@@ -151,6 +161,13 @@
       limpiarFormulario();
     }
 
+    function eliminarProducto(index) {
+      if (confirm('¿Seguro que deseas eliminar este producto?')) {
+        productos.splice(index, 1);
+        mostrarProductos();
+      }
+    }
+
     function mostrarProductos() {
       const resultadosDiv = document.getElementById('resultados');
       resultadosDiv.innerHTML = '';
@@ -174,23 +191,25 @@
           <p>ISC (${(producto.tasaISC * 100).toFixed(2)}%): C$ ${producto.impuestoISC.toFixed(2)}</p>
           <p>IVA (15%): C$ ${producto.impuestoIVA.toFixed(2)}</p>
           <p><strong>Total producto: C$ ${producto.total.toFixed(2)}</strong></p>
+          <button class="eliminar-btn" onclick="eliminarProducto(${index})">Eliminar</button>
         `;
         resultadosDiv.appendChild(productoDiv);
       });
 
-      // Mostrar totales de impuestos y gran total
-      const totalImpuestosDiv = document.createElement('div');
-      totalImpuestosDiv.className = 'total-impuestos';
-      totalImpuestosDiv.innerHTML = `
-        Total ISC: C$ ${totalISC.toFixed(2)}<br>
-        Total IVA: C$ ${totalIVA.toFixed(2)}
-      `;
-      resultadosDiv.appendChild(totalImpuestosDiv);
+      if (productos.length > 0) {
+        const totalImpuestosDiv = document.createElement('div');
+        totalImpuestosDiv.className = 'total-impuestos';
+        totalImpuestosDiv.innerHTML = `
+          Total ISC: C$ ${totalISC.toFixed(2)}<br>
+          Total IVA: C$ ${totalIVA.toFixed(2)}
+        `;
+        resultadosDiv.appendChild(totalImpuestosDiv);
 
-      const granTotalDiv = document.createElement('div');
-      granTotalDiv.className = 'gran-total';
-      granTotalDiv.innerText = `Gran Total a pagar: C$ ${granTotal.toFixed(2)}`;
-      resultadosDiv.appendChild(granTotalDiv);
+        const granTotalDiv = document.createElement('div');
+        granTotalDiv.className = 'gran-total';
+        granTotalDiv.innerText = `Gran Total a pagar: C$ ${granTotal.toFixed(2)}`;
+        resultadosDiv.appendChild(granTotalDiv);
+      }
     }
 
     function limpiarFormulario() {
