@@ -1,127 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Calculadora ISC e IVA</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f2f4f8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <title>Calculadora de Productos - ISC e IVA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
 
-        h1 {
-            color: #333;
-        }
+    h1 {
+      color: #333;
+    }
 
-        .card {
-            background: #ffffff;
-            padding: 20px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            margin-top: 20px;
-        }
+    .card, .producto {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      margin-top: 20px;
+      box-sizing: border-box;
+    }
 
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            color: #555;
-        }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      color: #555;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    button:hover {
+      background-color: #218838;
+    }
 
-        .resultados {
-            margin-top: 20px;
-        }
+    .resultados {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
 
-        .resultados p {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 5px 0;
-            font-size: 15px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Calculadora de ISC e IVA</h1>
+    .producto p {
+      margin: 5px 0;
+    }
 
-    <div class="card">
-        <label for="cantidadCajas">Cantidad de cajas:</label>
-        <input type="number" id="cantidadCajas" placeholder="Ingrese cantidad de cajas" min="1" value="1">
-
-        <label for="precioBase">Precio base unitario (C$):</label>
-        <input type="number" id="precioBase" placeholder="Ingrese precio base" step="0.01">
-
-        <label for="isc">Tasa de ISC (%):</label>
-        <input type="number" id="isc" placeholder="Ej: 15" step="0.01">
-
-        <button onclick="calcular()">Calcular</button>
-
-        <div class="resultados" id="resultados" style="display: none;">
-            <h3>Resultados:</h3>
-            <p id="subtotal"></p>
-            <p id="resultadoISC"></p>
-            <p id="resultadoIVA"></p>
-            <p id="totalFinal"></p>
-        </div>
-    </div>
-
-    <script>
-        function calcular() {
-            const cantidadCajas = parseFloat(document.getElementById('cantidadCajas').value);
-            const precioBase = parseFloat(document.getElementById('precioBase').value);
-            const tasaISC = parseFloat(document.getElementById('isc').value) / 100;
-            const tasaIVA = 0.15; // IVA estándar 15%
-
-            if (isNaN(cantidadCajas) || isNaN(precioBase) || isNaN(tasaISC)) {
-                alert('Por favor, completa todos los campos correctamente.');
-                return;
-            }
-
-            const subtotal = cantidadCajas * precioBase;
-            const impuestoISC = subtotal * tasaISC;
-            const baseConISC = subtotal + impuestoISC;
-            const impuestoIVA = baseConISC * tasaIVA;
-            const total = baseConISC + impuestoIVA;
-
-            document.getElementById('resultados').style.display = 'block';
-            document.getElementById('subtotal').innerText = `Subtotal (Cantidad de cajas × Precio base): C$ ${subtotal.toFixed(2)}`;
-            document.getElementById('resultadoISC').innerText = `ISC: C$ ${impuestoISC.toFixed(2)}`;
-            document.getElementById('resultadoIVA').innerText = `IVA: C$ ${impuestoIVA.toFixed(2)}`;
-            document.getElementById('totalFinal').innerText = `Total a pagar: C$ ${total.toFixed(2)}`;
-        }
-    </script>
-</body>
-</html>
+    .gran-total {
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 20px;
+      text-align: center
