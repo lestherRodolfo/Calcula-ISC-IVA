@@ -76,4 +76,103 @@
       font-weight: bold;
       font-size: 20px;
       margin-top: 20px;
-      text-align: center
+      text-align: center;
+      background: #d1e7dd;
+      padding: 10px;
+      border-radius: 8px;
+      color: #0f5132;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora de Productos (ISC + IVA)</h1>
+
+  <div class="card">
+    <label for="cantidad">Cantidad de cajas:</label>
+    <input type="number" id="cantidad" placeholder="Cantidad de cajas" min="1" value="1">
+
+    <label for="precio">Precio base unitario (C$):</label>
+    <input type="number" id="precio" placeholder="Precio base" step="0.01">
+
+    <label for="isc">Tasa de ISC (%):</label>
+    <input type="number" id="isc" placeholder="Ej: 15" step="0.01">
+
+    <button onclick="agregarProducto()">Agregar producto</button>
+  </div>
+
+  <div class="resultados" id="resultados"></div>
+
+  <script>
+    let productos = [];
+
+    function agregarProducto() {
+      const cantidad = parseFloat(document.getElementById('cantidad').value);
+      const precio = parseFloat(document.getElementById('precio').value);
+      const tasaISC = parseFloat(document.getElementById('isc').value) / 100;
+      const tasaIVA = 0.15; // IVA fijo 15%
+
+      if (isNaN(cantidad) || isNaN(precio) || isNaN(tasaISC)) {
+        alert('Por favor, completa todos los campos correctamente.');
+        return;
+      }
+
+      const subtotal = cantidad * precio;
+      const impuestoISC = subtotal * tasaISC;
+      const baseConISC = subtotal + impuestoISC;
+      const impuestoIVA = baseConISC * tasaIVA;
+      const total = baseConISC + impuestoIVA;
+
+      productos.push({
+        cantidad,
+        precio,
+        tasaISC,
+        subtotal,
+        impuestoISC,
+        impuestoIVA,
+        total
+      });
+
+      mostrarProductos();
+      limpiarFormulario();
+    }
+
+    function mostrarProductos() {
+      const resultadosDiv = document.getElementById('resultados');
+      resultadosDiv.innerHTML = '';
+
+      let granTotal = 0;
+
+      productos.forEach((producto, index) => {
+        granTotal += producto.total;
+
+        const productoDiv = document.createElement('div');
+        productoDiv.className = 'producto';
+        productoDiv.innerHTML = `
+          <h3>Producto ${index + 1}</h3>
+          <p>Cantidad: ${producto.cantidad}</p>
+          <p>Precio base: C$ ${producto.precio.toFixed(2)}</p>
+          <p>Subtotal: C$ ${producto.subtotal.toFixed(2)}</p>
+          <p>ISC (${(producto.tasaISC * 100).toFixed(2)}%): C$ ${producto.impuestoISC.toFixed(2)}</p>
+          <p>IVA (15%): C$ ${producto.impuestoIVA.toFixed(2)}</p>
+          <p><strong>Total producto: C$ ${producto.total.toFixed(2)}</strong></p>
+        `;
+        resultadosDiv.appendChild(productoDiv);
+      });
+
+      const granTotalDiv = document.createElement('div');
+      granTotalDiv.className = 'gran-total';
+      granTotalDiv.innerText = `Gran Total a pagar: C$ ${granTotal.toFixed(2)}`;
+
+      resultadosDiv.appendChild(granTotalDiv);
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('cantidad').value = 1;
+      document.getElementById('precio').value = '';
+      document.getElementById('isc').value = '';
+    }
+  </script>
+
+</body>
+</html>
