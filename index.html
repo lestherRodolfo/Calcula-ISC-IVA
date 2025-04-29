@@ -11,6 +11,8 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -72,15 +74,23 @@
       margin: 5px 0;
     }
 
-    .gran-total {
+    .gran-total, .total-impuestos {
       font-weight: bold;
-      font-size: 20px;
-      margin-top: 20px;
+      font-size: 18px;
+      margin-top: 15px;
       text-align: center;
       background: #d1e7dd;
       padding: 10px;
       border-radius: 8px;
       color: #0f5132;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      color: #777;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -102,6 +112,10 @@
   </div>
 
   <div class="resultados" id="resultados"></div>
+
+  <footer>
+    Diseñado por Lesther Vasquez
+  </footer>
 
   <script>
     let productos = [];
@@ -142,9 +156,13 @@
       resultadosDiv.innerHTML = '';
 
       let granTotal = 0;
+      let totalISC = 0;
+      let totalIVA = 0;
 
       productos.forEach((producto, index) => {
         granTotal += producto.total;
+        totalISC += producto.impuestoISC;
+        totalIVA += producto.impuestoIVA;
 
         const productoDiv = document.createElement('div');
         productoDiv.className = 'producto';
@@ -160,10 +178,18 @@
         resultadosDiv.appendChild(productoDiv);
       });
 
+      // Mostrar totales de impuestos y gran total
+      const totalImpuestosDiv = document.createElement('div');
+      totalImpuestosDiv.className = 'total-impuestos';
+      totalImpuestosDiv.innerHTML = `
+        Total ISC: C$ ${totalISC.toFixed(2)}<br>
+        Total IVA: C$ ${totalIVA.toFixed(2)}
+      `;
+      resultadosDiv.appendChild(totalImpuestosDiv);
+
       const granTotalDiv = document.createElement('div');
       granTotalDiv.className = 'gran-total';
       granTotalDiv.innerText = `Gran Total a pagar: C$ ${granTotal.toFixed(2)}`;
-
       resultadosDiv.appendChild(granTotalDiv);
     }
 
