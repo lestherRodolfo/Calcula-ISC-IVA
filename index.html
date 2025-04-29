@@ -1,78 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Calculadora ISC + IVA</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { text-align: center; }
-    table { width: 100%; margin-top: 20px; }
-    input[type="number"], input[type="text"] { width: 100%; padding: 8px; margin: 5px 0; }
-    button { padding: 10px; width: 100%; margin-top: 10px; }
-    .result { margin-top: 20px; font-size: 18px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Calculadora ISC e IVA</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .resultados {
+            margin-top: 20px;
+        }
+
+        .resultados p {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Calculadora de ISC e IVA</h1>
 
-<h1>Calculadora ISC + IVA</h1>
+    <div class="card">
+        <label for="cantidadCajas">Cantidad de cajas:</label>
+        <input type="number" id="cantidadCajas" placeholder="Ingrese cantidad de cajas" min="1" value="1">
 
-<table id="productTable">
-  <thead>
-    <tr>
-      <th>Producto</th>
-      <th>Precio Base (C$)</th>
-      <th>ISC (15%)</th>
-      <th>IVA (15%)</th>
-      <th>Total (C$)</th>
-    </tr>
-  </thead>
-  <tbody id="products"></tbody>
-</table>
+        <label for="precioBase">Precio base unitario (C$):</label>
+        <input type="number" id="precioBase" placeholder="Ingrese precio base" step="0.01">
 
-<button onclick="addProduct()">Agregar Producto</button>
-<button onclick="calculateTotal()">Calcular Total</button>
+        <label for="isc">Tasa de ISC (%):</label>
+        <input type="number" id="isc" placeholder="Ej: 15" step="0.01">
 
-<div class="result" id="totalResult"></div>
+        <button onclick="calcular()">Calcular</button>
 
-<script>
-let productCount = 0;
+        <div class="resultados" id="resultados" style="display: none;">
+            <h3>Resultados:</h3>
+            <p id="subtotal"></p>
+            <p id="resultadoISC"></p>
+            <p id="resultadoIVA"></p>
+            <p id="totalFinal"></p>
+        </div>
+    </div>
 
-function addProduct() {
-  const table = document.getElementById('products');
-  const row = document.createElement('tr');
+    <script>
+        function calcular() {
+            const cantidadCajas = parseFloat(document.getElementById('cantidadCajas').value);
+            const precioBase = parseFloat(document.getElementById('precioBase').value);
+            const tasaISC = parseFloat(document.getElementById('isc').value) / 100;
+            const tasaIVA = 0.15; // IVA estándar 15%
 
-  row.innerHTML = `
-    <td><input type="text" placeholder="Nombre" id="name${productCount}"></td>
-    <td><input type="number" placeholder="Precio" id="price${productCount}" step="0.01"></td>
-    <td id="isc${productCount}">-</td>
-    <td id="iva${productCount}">-</td>
-    <td id="total${productCount}">-</td>
-  `;
+            if (isNaN(cantidadCajas) || isNaN(precioBase) || isNaN(tasaISC)) {
+                alert('Por favor, completa todos los campos correctamente.');
+                return;
+            }
 
-  table.appendChild(row);
-  productCount++;
-}
+            const subtotal = cantidadCajas * precioBase;
+            const impuestoISC = subtotal * tasaISC;
+            const baseConISC = subtotal + impuestoISC;
+            const impuestoIVA = baseConISC * tasaIVA;
+            const total = baseConISC + impuestoIVA;
 
-function calculateTotal() {
-  let grandTotal = 0;
-  for (let i = 0; i < productCount; i++) {
-    const priceInput = document.getElementById(`price${i}`);
-    if (priceInput && priceInput.value !== '') {
-      const basePrice = parseFloat(priceInput.value);
-      const isc = basePrice * 0.15;
-      const iva = (basePrice + isc) * 0.15;
-      const total = basePrice + isc + iva;
-
-      document.getElementById(`isc${i}`).innerText = isc.toFixed(2);
-      document.getElementById(`iva${i}`).innerText = iva.toFixed(2);
-      document.getElementById(`total${i}`).innerText = total.toFixed(2);
-
-      grandTotal += total;
-    }
-  }
-  document.getElementById('totalResult').innerText = `Total General: C$ ${grandTotal.toFixed(2)}`;
-}
-</script>
-
+            document.getElementById('resultados').style.display = 'block';
+            document.getElementById('subtotal').innerText = `Subtotal (Cantidad de cajas × Precio base): C$ ${subtotal.toFixed(2)}`;
+            document.getElementById('resultadoISC').innerText = `ISC: C$ ${impuestoISC.toFixed(2)}`;
+            document.getElementById('resultadoIVA').innerText = `IVA: C$ ${impuestoIVA.toFixed(2)}`;
+            document.getElementById('totalFinal').innerText = `Total a pagar: C$ ${total.toFixed(2)}`;
+        }
+    </script>
 </body>
 </html>
